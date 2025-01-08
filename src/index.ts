@@ -1,5 +1,6 @@
 import DLMM from '@meteora-ag/dlmm';
 import {
+  DATA_DIR,
   DB_URL,
   PRIVATE_KEY,
   TOTAL_RANGE_INTERVAL,
@@ -86,7 +87,8 @@ const main = async () => {
   console.log('Migrating to latest done');
 
   const db = createSqliteDBConnection();
-  const dataEngine = new DataEngine(db, 1_000 * 60, __dirname);
+  // const dataEngine = new DataEngine(db, 1_000 * 10, DATA_DIR);
+  const dataEngine = new DataEngine(db, 1_000 * 60, DATA_DIR);
   dataEngineInterval = dataEngine.executeAtInterval();
   console.log('Data engine running');
 };

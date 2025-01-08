@@ -63,3 +63,4 @@ export const BLUE_CHIPS = [
   'zippySOL',
 ].map((token) => token.toLowerCase());
 export const DB_URL = process.env.DB_URL;
+export const DATA_DIR = process.env.DATA_DIR;
