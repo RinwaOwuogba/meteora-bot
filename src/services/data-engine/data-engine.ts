@@ -48,11 +48,24 @@ export class DataEngine {
     const { enrichedData, meteoraPairs, dexScreenerPairs } =
       await this.fetchAndEnrichData();
 
-    await Promise.all([
+    await Promise.allSettled([
       this.storeDataFiles(enrichedData, 'enriched_data', key),
       this.storeDataFiles(meteoraPairs, 'meteora_pairs', key),
       this.storeDataFiles(dexScreenerPairs, 'dex_screener_pairs', key),
-    ]);
+    ]).then((results) => {
+      results.forEach((result, index) => {
+        const fileType = [
+          'enriched_data',
+          'meteora_pairs',
+          'dex_screener_pairs',
+        ][index];
+        if (result.status === 'fulfilled') {
+          console.log(`✅ Successfully stored ${fileType} data`);
+        } else {
+          console.error(`❌ Failed to store ${fileType} data:`, result.reason);
+        }
+      });
+    });
 
     return key;
   }
@@ -64,13 +77,16 @@ export class DataEngine {
   }> {
     const tokenMap = await getJupiterTokenList();
     const meteoraPairs = await getMeteoraPairs();
+    console.log('Meteora pairs fetched');
     const addresses = meteoraPairs.map((pair) => pair.address);
     const dexScreenerPairs = await getDexScreenerPairs(addresses);
+    console.log('Dex screener pairs fetched');
     const enrichedData = addMeteoraData(
       tokenMap,
       dexScreenerPairs,
       meteoraPairs,
     );
+    console.log('Compiled data');
 
     return { enrichedData, meteoraPairs, dexScreenerPairs };
   }
@@ -81,7 +97,7 @@ export class DataEngine {
   //   dexScreenerPairs: any;
   //   date: string;
   // }> {
-  //   // Instantiate a shared date field
+  //   Instantiate a shared date field
   //   const date = new Date().toISOString();
 
   //   // Mock data
