@@ -87,6 +87,21 @@ export class DataEngine {
   //     meteoraPairs,
   //   );
   //   console.log('Compiled data');
+  //   console.log(
+  //     'Size of dexScreener data in memory:',
+  //     JSON.stringify(dexScreenerPairs).length,
+  //     'bytes',
+  //   );
+  //   console.log(
+  //     'Size of enriched data in memory:',
+  //     JSON.stringify(enrichedData).length,
+  //     'bytes',
+  //   );
+  //   console.log(
+  //     'Size of meteora data in memory:',
+  //     JSON.stringify(meteoraPairs).length,
+  //     'bytes',
+  //   );
 
   //   return { enrichedData, meteoraPairs, dexScreenerPairs };
   // }
@@ -117,6 +132,14 @@ export class DataEngine {
       additionalInfo: `Enriched info for ${pair.pairName}`,
       date,
     }));
+
+    console.log('testing large write');
+    const data = 'x'.repeat(45_000_000); // 45MB
+    await fs.writeFile(
+      path.join(this.saveDir, 'test', 'test-large.json'),
+      data,
+    );
+    console.log('Wrote 45MB file successfully');
 
     return { enrichedData, meteoraPairs, dexScreenerPairs, date };
   }
