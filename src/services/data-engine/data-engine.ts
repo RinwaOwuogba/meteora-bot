@@ -70,56 +70,56 @@ export class DataEngine {
     return key;
   }
 
-  async fetchAndEnrichData(): Promise<{
-    enrichedData: any;
-    meteoraPairs: any;
-    dexScreenerPairs: any;
-  }> {
-    const tokenMap = await getJupiterTokenList();
-    const meteoraPairs = await getMeteoraPairs();
-    console.log('Meteora pairs fetched');
-    const addresses = meteoraPairs.map((pair) => pair.address);
-    const dexScreenerPairs = await getDexScreenerPairs(addresses);
-    console.log('Dex screener pairs fetched');
-    const enrichedData = addMeteoraData(
-      tokenMap,
-      dexScreenerPairs,
-      meteoraPairs,
-    );
-    console.log('Compiled data');
-
-    return { enrichedData, meteoraPairs, dexScreenerPairs };
-  }
-
   // async fetchAndEnrichData(): Promise<{
   //   enrichedData: any;
   //   meteoraPairs: any;
   //   dexScreenerPairs: any;
-  //   date: string;
   // }> {
-  //   Instantiate a shared date field
-  //   const date = new Date().toISOString();
+  //   const tokenMap = await getJupiterTokenList();
+  //   const meteoraPairs = await getMeteoraPairs();
+  //   console.log('Meteora pairs fetched');
+  //   const addresses = meteoraPairs.map((pair) => pair.address);
+  //   const dexScreenerPairs = await getDexScreenerPairs(addresses);
+  //   console.log('Dex screener pairs fetched');
+  //   const enrichedData = addMeteoraData(
+  //     tokenMap,
+  //     dexScreenerPairs,
+  //     meteoraPairs,
+  //   );
+  //   console.log('Compiled data');
 
-  //   // Mock data
-  //   const meteoraPairs = [
-  //     { address: 'pair-1-address', pairName: 'BTC/ETH', date },
-  //     { address: 'pair-2-address', pairName: 'ETH/USDT', date },
-  //   ];
-
-  //   const dexScreenerPairs = [
-  //     { address: 'pair-1-address', liquidity: 5000, volume: 1000, date },
-  //     { address: 'pair-2-address', liquidity: 8000, volume: 1200, date },
-  //   ];
-
-  //   const enrichedData = meteoraPairs.map((pair) => ({
-  //     ...pair,
-  //     dexScreenerData: dexScreenerPairs.find((d) => d.address === pair.address),
-  //     additionalInfo: `Enriched info for ${pair.pairName}`,
-  //     date,
-  //   }));
-
-  //   return { enrichedData, meteoraPairs, dexScreenerPairs, date };
+  //   return { enrichedData, meteoraPairs, dexScreenerPairs };
   // }
+
+  async fetchAndEnrichData(): Promise<{
+    enrichedData: any;
+    meteoraPairs: any;
+    dexScreenerPairs: any;
+    date: string;
+  }> {
+    // Instantiate a shared date field
+    const date = new Date().toISOString();
+
+    // Mock data
+    const meteoraPairs = [
+      { address: 'pair-1-address', pairName: 'BTC/ETH', date },
+      { address: 'pair-2-address', pairName: 'ETH/USDT', date },
+    ];
+
+    const dexScreenerPairs = [
+      { address: 'pair-1-address', liquidity: 5000, volume: 1000, date },
+      { address: 'pair-2-address', liquidity: 8000, volume: 1200, date },
+    ];
+
+    const enrichedData = meteoraPairs.map((pair) => ({
+      ...pair,
+      dexScreenerData: dexScreenerPairs.find((d) => d.address === pair.address),
+      additionalInfo: `Enriched info for ${pair.pairName}`,
+      date,
+    }));
+
+    return { enrichedData, meteoraPairs, dexScreenerPairs, date };
+  }
 
   async storeMetricsInDb(
     startTime: Date,
