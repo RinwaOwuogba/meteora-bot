@@ -71,9 +71,9 @@ export class DataEngine {
   }
 
   async fetchAndEnrichData(): Promise<{
-    enrichedData: any;
-    meteoraPairs: any;
-    dexScreenerPairs: any;
+    enrichedData: any[];
+    meteoraPairs: any[];
+    dexScreenerPairs: any[];
   }> {
     const tokenMap = await getJupiterTokenList();
     const meteoraPairs = await getMeteoraPairs();
@@ -153,18 +153,38 @@ export class DataEngine {
   }
 
   async storeDataFiles(
-    data: any,
+    data: any[],
     directory: string,
     key: string,
   ): Promise<void> {
     const timestamp = Date.now();
-    const fileName = `${key}_${timestamp}.json`;
+    const fileName = `${timestamp}_${key}.json`;
     const filePath = path.join(this.saveDir, directory, fileName);
 
     // Ensure the directory exists
     await fs.mkdir(path.dirname(filePath), { recursive: true });
 
-    // Write the file
-    await fs.writeFile(filePath, JSON.stringify(data, null, 2));
+    // Write the file incrementally
+    const fileHandle = await fs.open(filePath, 'w');
+
+    try {
+      // Start JSON array
+      await fileHandle.write('[');
+
+      for (let i = 0; i < data.length; i++) {
+        const item = JSON.stringify(data[i], null, 2);
+        await fileHandle.write(item);
+
+        // Add a comma after each item except the last
+        if (i < data.length - 1) {
+          await fileHandle.write(',');
+        }
+      }
+
+      // End JSON array
+      await fileHandle.write(']');
+    } finally {
+      await fileHandle.close();
+    }
   }
 }
