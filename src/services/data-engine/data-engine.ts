@@ -70,79 +70,71 @@ export class DataEngine {
     return key;
   }
 
-  // async fetchAndEnrichData(): Promise<{
-  //   enrichedData: any;
-  //   meteoraPairs: any;
-  //   dexScreenerPairs: any;
-  // }> {
-  //   const tokenMap = await getJupiterTokenList();
-  //   const meteoraPairs = await getMeteoraPairs();
-  //   console.log('Meteora pairs fetched');
-  //   const addresses = meteoraPairs.map((pair) => pair.address);
-  //   const dexScreenerPairs = await getDexScreenerPairs(addresses);
-  //   console.log('Dex screener pairs fetched');
-  //   const enrichedData = addMeteoraData(
-  //     tokenMap,
-  //     dexScreenerPairs,
-  //     meteoraPairs,
-  //   );
-  //   console.log('Compiled data');
-  //   console.log(
-  //     'Size of dexScreener data in memory:',
-  //     JSON.stringify(dexScreenerPairs).length,
-  //     'bytes',
-  //   );
-  //   console.log(
-  //     'Size of enriched data in memory:',
-  //     JSON.stringify(enrichedData).length,
-  //     'bytes',
-  //   );
-  //   console.log(
-  //     'Size of meteora data in memory:',
-  //     JSON.stringify(meteoraPairs).length,
-  //     'bytes',
-  //   );
-
-  //   return { enrichedData, meteoraPairs, dexScreenerPairs };
-  // }
-
   async fetchAndEnrichData(): Promise<{
     enrichedData: any;
     meteoraPairs: any;
     dexScreenerPairs: any;
-    date: string;
   }> {
-    // Instantiate a shared date field
-    const date = new Date().toISOString();
-
-    // Mock data
-    const meteoraPairs = [
-      { address: 'pair-1-address', pairName: 'BTC/ETH', date },
-      { address: 'pair-2-address', pairName: 'ETH/USDT', date },
-    ];
-
-    const dexScreenerPairs = [
-      { address: 'pair-1-address', liquidity: 5000, volume: 1000, date },
-      { address: 'pair-2-address', liquidity: 8000, volume: 1200, date },
-    ];
-
-    const enrichedData = meteoraPairs.map((pair) => ({
-      ...pair,
-      dexScreenerData: dexScreenerPairs.find((d) => d.address === pair.address),
-      additionalInfo: `Enriched info for ${pair.pairName}`,
-      date,
-    }));
-
-    console.log('testing large write');
-    const data = 'x'.repeat(45_000_000); // 45MB
-    await fs.writeFile(
-      path.join(this.saveDir, 'test', 'test-large.json'),
-      data,
+    const tokenMap = await getJupiterTokenList();
+    const meteoraPairs = await getMeteoraPairs();
+    console.log('Meteora pairs fetched');
+    const addresses = meteoraPairs.map((pair) => pair.address);
+    const dexScreenerPairs = await getDexScreenerPairs(addresses);
+    console.log('Dex screener pairs fetched');
+    const enrichedData = addMeteoraData(
+      tokenMap,
+      dexScreenerPairs,
+      meteoraPairs,
     );
-    console.log('Wrote 45MB file successfully');
+    console.log('Compiled data');
+    console.log(
+      'Size of dexScreener data in memory:',
+      JSON.stringify(dexScreenerPairs).length,
+      'bytes',
+    );
+    console.log(
+      'Size of enriched data in memory:',
+      JSON.stringify(enrichedData).length,
+      'bytes',
+    );
+    console.log(
+      'Size of meteora data in memory:',
+      JSON.stringify(meteoraPairs).length,
+      'bytes',
+    );
 
-    return { enrichedData, meteoraPairs, dexScreenerPairs, date };
+    return { enrichedData, meteoraPairs, dexScreenerPairs };
   }
+
+  // async fetchAndEnrichData(): Promise<{
+  //   enrichedData: any;
+  //   meteoraPairs: any;
+  //   dexScreenerPairs: any;
+  //   date: string;
+  // }> {
+  //   // Instantiate a shared date field
+  //   const date = new Date().toISOString();
+
+  //   // Mock data
+  //   const meteoraPairs = [
+  //     { address: 'pair-1-address', pairName: 'BTC/ETH', date },
+  //     { address: 'pair-2-address', pairName: 'ETH/USDT', date },
+  //   ];
+
+  //   const dexScreenerPairs = [
+  //     { address: 'pair-1-address', liquidity: 5000, volume: 1000, date },
+  //     { address: 'pair-2-address', liquidity: 8000, volume: 1200, date },
+  //   ];
+
+  //   const enrichedData = meteoraPairs.map((pair) => ({
+  //     ...pair,
+  //     dexScreenerData: dexScreenerPairs.find((d) => d.address === pair.address),
+  //     additionalInfo: `Enriched info for ${pair.pairName}`,
+  //     date,
+  //   }));
+
+  //   return { enrichedData, meteoraPairs, dexScreenerPairs, date };
+  // }
 
   async storeMetricsInDb(
     startTime: Date,
