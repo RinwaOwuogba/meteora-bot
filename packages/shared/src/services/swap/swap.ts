@@ -37,7 +37,7 @@ export async function buyToken(
         )
       ).json();
 
-      const { swapTransaction } = await (
+      const { swapTransaction } = (await (
         await fetch('https://quote-api.jup.ag/v6/swap', {
           method: 'POST',
           headers: {
@@ -50,7 +50,7 @@ export async function buyToken(
             prioritizationFeeLamports: PRIORITY_FEE,
           }),
         })
-      ).json();
+      ).json()) as any;
 
       const swapTransactionBuf = Buffer.from(swapTransaction, 'base64');
       const transaction = VersionedTransaction.deserialize(swapTransactionBuf);
@@ -118,7 +118,7 @@ export async function sellToken(
         )
       ).json();
 
-      const { swapTransaction } = await (
+      const { swapTransaction } = (await (
         await fetch('https://quote-api.jup.ag/v6/swap', {
           method: 'POST',
           headers: {
@@ -131,7 +131,7 @@ export async function sellToken(
             prioritizationFeeLamports: PRIORITY_FEE,
           }),
         })
-      ).json();
+      ).json()) as any;
 
       const swapTransactionBuf = Buffer.from(swapTransaction, 'base64');
       const transaction = VersionedTransaction.deserialize(swapTransactionBuf);

@@ -19,6 +19,9 @@ export interface Database {
 // Users Table
 export interface UsersTable {
   id: Generated<number>;
+  telegram_id: string | null;
+  telegram_username: string | null;
+  is_admin: number;
 
   meta_data: JSONColumnType<{
     login_at?: string;
