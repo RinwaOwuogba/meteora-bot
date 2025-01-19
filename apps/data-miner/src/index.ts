@@ -4,14 +4,11 @@ import {
   dataEngine,
   db,
 } from '@meteora-bot-monorepo/shared';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 let dataEngineInterval: NodeJS.Timeout | null = null;
 
 const main = async (): Promise<void> => {
-  const dbConnection = db.createSqliteDBConnection();
+  const dbConnection = db.createSqliteDBConnection(config.DB_URL);
   const dataEngineInstance = new dataEngine.DataEngine(
     dbConnection,
     1000 * 60 * 60,

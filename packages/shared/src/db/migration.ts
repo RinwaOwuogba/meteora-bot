@@ -3,8 +3,8 @@ import { promises as fs } from 'fs';
 import { Migrator, FileMigrationProvider } from 'kysely';
 import { createSqliteDBConnection } from './db';
 
-export async function migrateToLatest() {
-  const db = createSqliteDBConnection();
+export async function migrateToLatest(url: string) {
+  const db = createSqliteDBConnection(url);
 
   const migrator = new Migrator({
     db,
