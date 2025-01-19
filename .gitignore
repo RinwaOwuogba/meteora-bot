@@ -7,3 +7,5 @@ dist
 **/enriched-meteora-pairs.json
 **/dexscreener-pairs.json
 notes
+
+*.tsbuildinfo

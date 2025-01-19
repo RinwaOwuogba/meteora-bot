@@ -42,7 +42,7 @@ export type UserUpdate = Updateable<UsersTable>;
 export interface WalletsTable {
   id: Generated<number>;
   user_id: number;
-
+  telegram_id: string;
   wallet_address: string;
 
   meta_data: JSONColumnType<{

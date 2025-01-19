@@ -235,3 +235,5 @@ export function generateId(length = 21) {
   }
   return id;
 }
+
+export * from './connection-pool';

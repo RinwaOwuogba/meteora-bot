@@ -1,18 +1,13 @@
-import { TelegramService } from '@meteora-bot/shared/dist/services/telegram/telegram';
-import { createSqliteDBConnection } from '@meteora-bot/shared/dist/db/db';
-import { migrateToLatest } from '@meteora-bot/shared/dist/db/migration';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { db, telegram } from '@meteora-bot-monorepo/shared';
 
 const main = async (): Promise<void> => {
   console.log('Running migrations...');
-  await migrateToLatest();
+  await db.migrateToLatest;
   console.log('Migrations ran');
 
-  const db = createSqliteDBConnection();
-  const telegramService = new TelegramService(db);
-  console.log('Telegram bot running');
+  const dbConnection = db.createSqliteDBConnection();
+  const telegramService = new telegram.TelegramService(dbConnection);
+  console.log('Telegram bot running [1]');
 };
 
 main();

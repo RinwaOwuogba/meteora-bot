@@ -1,13 +1,21 @@
 {
   "name": "meteora-bot-monorepo",
-  "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "start": "node apps/$APP_NAME/dist/index.js",
+    "dev:watch": "nodemon --watch packages/shared/dist --watch apps/$APP/src -e ts,js --exec \"pnpm --filter @meteora-bot-monorepo/$APP dev\"",
+    "dev:with-build": "concurrently \"pnpm -r build:watch\" \"APP=$APP pnpm run dev:watch\"",
+    "dev:tg": "APP=telegram-bot pnpm run dev:with-build",
+    "dev:dm": "APP=data-miner pnpm run dev:with-build",
+    "clean": "pnpm -r clean"
+  },
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
-  "scripts": {
-    "start": "node start.js",
-    "build": "yarn workspaces run build"
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "nodemon": "^3.0.0"
   }
 }

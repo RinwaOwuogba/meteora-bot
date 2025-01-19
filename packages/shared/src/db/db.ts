@@ -14,3 +14,6 @@ export const createSqliteDBConnection = (url = DB_URL) => {
 
   return db;
 };
+
+export * from '@/db/types';
+export * from '@/db/migration';

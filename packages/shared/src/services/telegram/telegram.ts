@@ -1,10 +1,16 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { Database } from '@/db/types';
 import { Kysely } from 'kysely';
-import { mainMenuKeyboard, walletMenuKeyboard } from './keyboards/main-menu';
+import {
+  mainMenuKeyboard,
+  getWalletMenuKeyboard,
+} from './keyboards/main-menu';
 import { MenuState, UserSession } from './types';
 import { registerWalletHandlers } from './handlers/wallet';
-import { TELEGRAM_ADMIN_IDS, TELEGRAM_BOT_TOKEN } from '@/config/config';
+import {
+  TELEGRAM_ADMIN_IDS,
+  TELEGRAM_BOT_TOKEN,
+} from '@/config/config';
 
 export class TelegramService {
   private bot: TelegramBot;
@@ -96,10 +102,16 @@ export class TelegramService {
       switch (action) {
         case 'wallet_menu':
           session.menuState = MenuState.WALLET;
+          const hasWallet = !!(await this.db
+            .selectFrom('wallets')
+            .select(['id', 'telegram_id'])
+            .where('telegram_id', '=', userId.toString())
+            .executeTakeFirst());
+
           await this.bot.editMessageText('Wallet Management:', {
             chat_id: chatId,
             message_id: query.message.message_id,
-            reply_markup: walletMenuKeyboard.reply_markup,
+            reply_markup: getWalletMenuKeyboard(hasWallet).reply_markup,
           });
           break;
 

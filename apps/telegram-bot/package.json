@@ -1,15 +1,20 @@
 {
-  "name": "@meteora-bot/telegram-bot",
+  "name": "@meteora-bot-monorepo/telegram-bot",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc -w",
+    "build": "tsc && tsc-alias",
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts",
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "@meteora-bot/shared": "1.0.0",
+    "@meteora-bot-monorepo/shared": "workspace:*",
     "dotenv": "^16.0.3",
     "typescript": "^4.9.5"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
+    "tsconfig-paths": "^4.2.0"
   }
 }

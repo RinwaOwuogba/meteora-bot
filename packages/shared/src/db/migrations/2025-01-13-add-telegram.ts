@@ -23,6 +23,12 @@ export async function up(db: Kysely<any>): Promise<void> {
     .on('users')
     .column('telegram_id')
     .execute();
+
+  // Update telegram_id in wallets table
+  await db.schema
+    .alterTable('wallets')
+    .addColumn('telegram_id', 'text')
+    .execute();
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
