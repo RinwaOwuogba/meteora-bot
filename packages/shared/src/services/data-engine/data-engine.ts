@@ -43,15 +43,15 @@ export class DataEngine {
       await this.fetchAndEnrichData();
 
     await Promise.allSettled([
-      this.storeDataFiles(enrichedData, 'enriched_data', key),
-      this.storeDataFiles(meteoraPairs, 'meteora_pairs', key),
-      this.storeDataFiles(dexScreenerPairs, 'dex_screener_pairs', key),
+      this.storeDataFiles(enrichedData, 'enriched_dex_pairs', key),
+      // this.storeDataFiles(meteoraPairs, 'meteora_pairs', key),
+      // this.storeDataFiles(dexScreenerPairs, 'dex_screener_pairs', key),
     ]).then((results) => {
       results.forEach((result, index) => {
         const fileType = [
-          'enriched_data',
-          'meteora_pairs',
-          'dex_screener_pairs',
+          'enriched_dex_pairs',
+          // 'meteora_pairs',
+          // 'dex_screener_pairs',
         ][index];
         if (result.status === 'fulfilled') {
           console.log(`✅ Successfully stored ${fileType} data`);

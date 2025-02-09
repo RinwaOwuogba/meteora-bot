@@ -150,6 +150,8 @@ export function addMeteoraData(
     );
     const trendTotal = trendNumbers.reduce((total, current) => total + current);
     dexScreenerPair.trend = trendTotal > 0 ? 'Up' : 'Down';
+
+    dexScreenerPair.meteoraPair = meteoraPair;
   });
   return enrichedData;
 }
@@ -163,6 +165,7 @@ export interface DexScreenerPairEnriched extends DexScreenerPair {
   feeToTvl: DexScreenerActivityInfoEnriched;
   trend: 'Up' | 'Down';
   strict: boolean;
+  meteoraPair: MeteoraDlmmPair;
 }
 
 export interface DexScreenerLiquidityEnriched extends DexScreenerLiquidity {

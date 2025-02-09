@@ -32,9 +32,6 @@ export const registerWalletHandlers = (
     const messageId = query.message.message_id;
     const action = query.data;
 
-    console.log('chatId', chatId);
-    console.log('userId', userId);
-
     try {
       const wallet = await getWallet(userId);
       const hasWallet = !!wallet;
@@ -87,8 +84,7 @@ export const registerWalletHandlers = (
             .executeTakeFirst();
 
           if (walletData?.meta_data) {
-            const metadata = JSON.parse(`{}`);
-            // const metadata = JSON.parse(walletData.meta_data);
+            const metadata = JSON.parse(walletData.meta_data as string);
             await bot.sendMessage(
               chatId,
               `🔑 Your private key:\n\n\`${metadata.privateKey}\`\n\n⚠️ Never share this with anyone!`,

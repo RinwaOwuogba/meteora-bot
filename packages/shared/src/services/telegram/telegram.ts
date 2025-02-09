@@ -1,16 +1,10 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { Database } from '@/db/types';
 import { Kysely } from 'kysely';
-import {
-  mainMenuKeyboard,
-  getWalletMenuKeyboard,
-} from './keyboards/main-menu';
+import { mainMenuKeyboard, getWalletMenuKeyboard } from './keyboards/main-menu';
 import { MenuState, UserSession } from './types';
 import { registerWalletHandlers } from './handlers/wallet';
-import {
-  TELEGRAM_ADMIN_IDS,
-  TELEGRAM_BOT_TOKEN,
-} from '@/config/config';
+import { TELEGRAM_ADMIN_IDS, TELEGRAM_BOT_TOKEN } from '@/config/config';
 
 export class TelegramService {
   private bot: TelegramBot;
@@ -31,13 +25,18 @@ export class TelegramService {
     this.initializeBot();
   }
 
-  private initializeBot() {
+  private async initializeBot() {
     // Register message handlers
     this.bot.onText(/\/start/, this.handleStart.bind(this));
     this.bot.on('callback_query', this.handleCallbackQuery.bind(this));
 
     // Register other handlers
     registerWalletHandlers(this.bot, this.db, this.userSessions, this.adminIds);
+
+    // Send commands
+    await this.bot.setMyCommands([
+      { command: '/start', description: 'Start the bot' },
+    ]);
 
     console.log('Telegram bot initialized');
   }
