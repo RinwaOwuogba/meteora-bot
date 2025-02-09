@@ -83,10 +83,10 @@ const main = async () => {
   // console.log(opportunities);
 
   console.log('Migrating to latest');
-  await migrateToLatest();
+  await migrateToLatest(DB_URL);
   console.log('Migrating to latest done');
 
-  const db = createSqliteDBConnection();
+  const db = createSqliteDBConnection(DB_URL);
   // const dataEngine = new DataEngine(db, 1_000 * 60, DATA_DIR); // 1 minute
   // const dataEngine = new DataEngine(db, 1_000 * 60 * 15, DATA_DIR); // 15 minutes
   const dataEngine = new DataEngine(db, 1_000 * 60 * 60, DATA_DIR); // 1 hour

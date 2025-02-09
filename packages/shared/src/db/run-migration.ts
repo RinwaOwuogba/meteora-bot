@@ -1,3 +1,4 @@
+import { DB_URL } from '@/config/config';
 import { migrateToLatest } from './migration';
 
-migrateToLatest();
+migrateToLatest(DB_URL);
