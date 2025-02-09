@@ -11,9 +11,9 @@ const main = async (): Promise<void> => {
   const dbConnection = db.createSqliteDBConnection(config.DB_URL);
   const dataEngineInstance = new dataEngine.DataEngine(
     dbConnection,
-    1000 * 60 * 15,
+    1000 * 60 * 20,
     config.DATA_DIR,
-  ); // 15 minutes
+  ); // 20 minutes
   dataEngineInterval = dataEngineInstance.executeAtInterval();
   console.log('Data engine running');
 };
