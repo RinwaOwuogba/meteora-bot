@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# 1. Check CLI args for Dokku app name and optional app directory
+# 1. Check CLI args for Dokku app name and optional remote name
 if [ -z "${1:-}" ]; then
-  echo "Usage: $0 <dokku-app-name> [app-directory-name]"
+  echo "Usage: $0 <dokku-app-name> [remote-name]"
   exit 1
 fi
 
 APP_NAME="$1"
-# Use second argument if provided, otherwise use APP_NAME
-APP_DIR="${2:-$APP_NAME}"
-REMOTE_NAME="dokku-$APP_NAME"
+# Use second argument if provided, otherwise default to "dokku-$APP_NAME"
+REMOTE_NAME="${2:-dokku-$APP_NAME}"
 
 # 2. Parse the Git remote URL from the current directory (or parent) without changing dirs yet
 #    This will fail if the remote doesn't exist, so we handle that gracefully.
@@ -43,14 +42,14 @@ git worktree add --detach "$TEMP_DIR" HEAD
 # 5. Remove all directories under apps except the target app
 cd "$TEMP_DIR"
 for dir in apps/*; do
-  if [ -d "$dir" ] && [ "$(basename "$dir")" != "$APP_DIR" ]; then
+  if [ -d "$dir" ] && [ "$(basename "$dir")" != "$APP_NAME" ]; then
     rm -rf "$dir"
   fi
 done
 
 # 6. Commit that removal in the temp worktree
 git add -A
-git commit --allow-empty -m "Keep only apps/$APP_DIR for Dokku deployment"
+git commit --allow-empty -m "Keep only apps/$APP_NAME for Dokku deployment"
 
 # 7. Push from detached HEAD to main on the Dokku remote
 #    Use a fully qualified ref on the remote side: refs/heads/main
