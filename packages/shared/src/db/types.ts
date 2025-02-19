@@ -14,6 +14,8 @@ export interface Database {
   fees: FeesTable;
   position_logs: PositionLogsTable;
   metrics: MetricsTable;
+  pools: PoolsTable;
+  fetch_times: FetchTimeTable;
 }
 
 // Users Table
@@ -129,9 +131,83 @@ export interface MetricsTable {
   end_time: string;
   key: string;
   meta_data: string;
-  created_at: ColumnType<Date, string | undefined, never>;
+  created_at: ColumnType<string | undefined>;
 }
 
 export type Metric = Selectable<MetricsTable>;
 export type NewMetric = Insertable<MetricsTable>;
 export type MetricUpdate = Updateable<MetricsTable>;
+
+// Pools Table
+export interface PoolsTable {
+  id: Generated<number>;
+  pair_address: string;
+  chain_id: string;
+  dex_id: string;
+  fetch_time_id: number;
+
+  // Core metrics
+  liquidity_usd: number;
+  market_cap: number;
+  fdv: number;
+  pair_created_at: ColumnType<Date, string | undefined, never>;
+
+  // 24H metrics
+  txns_24h: number;
+  buys_24h: number;
+  sells_24h: number;
+  volume_24h: number;
+  price_change_24h: number;
+
+  // 6H metrics
+  txns_6h: number;
+  buys_6h: number;
+  sells_6h: number;
+  volume_6h: number;
+  price_change_6h: number;
+
+  // 1H metrics
+  txns_1h: number;
+  buys_1h: number;
+  sells_1h: number;
+  volume_1h: number;
+  price_change_1h: number;
+
+  // 5M metrics
+  txns_5m: number;
+  buys_5m: number;
+  sells_5m: number;
+  volume_5m: number;
+  price_change_5m: number;
+
+  // Store complete raw data
+  raw_data: JSONColumnType<any>;
+
+  created_at: ColumnType<Date, string | undefined, never>;
+  updated_at: ColumnType<Date, string | undefined, never>;
+}
+
+export type Pool = Selectable<PoolsTable>;
+export type NewPool = Insertable<PoolsTable>;
+export type PoolUpdate = Updateable<PoolsTable>;
+
+// Fetch Time Table
+export interface FetchTimeTable {
+  id: Generated<number>;
+  timestamp: ColumnType<Date, string | undefined, never>;
+  date: ColumnType<Date, string | undefined, never>;
+  query_key: string;
+
+  meta_data: JSONColumnType<{
+    query_params?: Record<string, any>;
+    status?: 'success' | 'error';
+    error?: string;
+  }>;
+
+  created_at: ColumnType<Date, string | undefined, never>;
+  updated_at: ColumnType<Date, string | undefined, never>;
+}
+
+export type FetchTime = Selectable<FetchTimeTable>;
+export type NewFetchTime = Insertable<FetchTimeTable>;
+export type FetchTimeUpdate = Updateable<FetchTimeTable>;

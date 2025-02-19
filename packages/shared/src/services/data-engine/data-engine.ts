@@ -7,11 +7,14 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { addMeteoraData } from '../meteora/get-dlmm-opportunities';
 import { generateId } from '@/utils/utils';
+import { DataIndexer } from './indexer';
 
 export class DataEngine {
   private db: Kysely<Database>;
   private interval: number;
   private saveDir: string;
+  private dataIndexer: DataIndexer;
+
   constructor(
     db: Kysely<Database>,
     interval: number = 1000 * 60 * 60,
@@ -20,6 +23,7 @@ export class DataEngine {
     this.db = db;
     this.interval = interval;
     this.saveDir = saveDir;
+    this.dataIndexer = new DataIndexer(this.db);
   }
 
   executeAtInterval(): NodeJS.Timeout {
@@ -27,8 +31,10 @@ export class DataEngine {
       try {
         const startTime = new Date();
         console.log('Fetching and storing data...');
+
         const key = await this.fetchAndStoreData();
         console.log('Data stored successfully with key:', key);
+
         const endTime = new Date();
         await this.storeMetricsInDb(startTime, endTime, key);
       } catch (error) {
@@ -72,9 +78,11 @@ export class DataEngine {
     const tokenMap = await getJupiterTokenList();
     const meteoraPairs = await getMeteoraPairs();
     console.log('Meteora pairs fetched');
+
     const addresses = meteoraPairs.map((pair) => pair.address);
     const dexScreenerPairs = await getDexScreenerPairs(addresses);
     console.log('Dex screener pairs fetched');
+
     const enrichedData = addMeteoraData(
       tokenMap,
       dexScreenerPairs,
@@ -96,7 +104,7 @@ export class DataEngine {
         start_time: startTime.toISOString(),
         end_time: endTime.toISOString(),
         key,
-        meta_data: JSON.stringify({ additionalInfo: 'example' }), // Add any additional metadata here
+        meta_data: JSON.stringify({}), // Add any additional metadata here
       })
       .execute();
   }
@@ -105,35 +113,38 @@ export class DataEngine {
     data: any[],
     directory: string,
     key: string,
+    date: Date = new Date(), // allow passing in a specific date if needed
   ): Promise<void> {
-    const timestamp = Date.now();
+    // Create a date segment using ISO format (YYYY-MM-DD)
+    const timestamp = date.toISOString();
+    const dateSegment = timestamp.split('T')[0]; // e.g. "2023-10-05"
     const fileName = `${timestamp}_${key}.json`;
-    const filePath = path.join(this.saveDir, directory, fileName);
+
+    // Construct the file path with the date segment
+    const filePath = path.join(this.saveDir, directory, dateSegment, fileName);
 
     // Ensure the directory exists
     await fs.mkdir(path.dirname(filePath), { recursive: true });
 
-    // Write the file incrementally
-    const fileHandle = await fs.open(filePath, 'w');
-
+    // Write the file immediately with error handling
     try {
-      // Start JSON array
-      await fileHandle.write('[');
+      const fileContent = JSON.stringify(data, null, 2);
+      await fs.writeFile(filePath, fileContent);
+      console.log(`Data successfully written to ${filePath}`);
+    } catch (error) {
+      console.error(`Failed to write data to ${filePath}:`, error);
+    }
 
-      for (let i = 0; i < data.length; i++) {
-        const item = JSON.stringify(data[i], null, 2);
-        await fileHandle.write(item);
-
-        // Add a comma after each item except the last
-        if (i < data.length - 1) {
-          await fileHandle.write(',');
-        }
-      }
-
-      // End JSON array
-      await fileHandle.write(']');
-    } finally {
-      await fileHandle.close();
+    // Use the indexer to index the data
+    try {
+      await this.dataIndexer.indexData(data, date, key);
+      console.log('Data successfully indexed');
+    } catch (error) {
+      console.error('Failed to index data:', error);
     }
   }
 }
+
+export * from './indexer';
+
+export * from './sqlite-to-postgres';
