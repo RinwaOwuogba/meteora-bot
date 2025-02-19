@@ -62,7 +62,7 @@ export const BLUE_CHIPS = [
   'mSOL',
   'zippySOL',
 ].map((token) => token.toLowerCase());
-export const DB_URL = process.env.DB_URL || '';
+export const DB_URL = process.env.DATABASE_URL || '';
 export const DATA_DIR = process.env.DATA_DIR || '';
 export const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 export const TELEGRAM_ADMIN_IDS = process.env.TELEGRAM_ADMIN_IDS || '';
