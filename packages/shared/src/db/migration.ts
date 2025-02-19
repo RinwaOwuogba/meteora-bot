@@ -1,10 +1,10 @@
 import * as path from 'path';
 import { promises as fs } from 'fs';
 import { Migrator, FileMigrationProvider } from 'kysely';
-import { createSqliteDBConnection } from './db';
+import { createPostgresDBConnection } from './db';
 
 export async function migrateToLatest(url: string) {
-  const db = createSqliteDBConnection(url);
+  const db = createPostgresDBConnection(url);
 
   const migrator = new Migrator({
     db,
@@ -12,7 +12,7 @@ export async function migrateToLatest(url: string) {
       fs,
       path,
       // This needs to be an absolute path.
-      migrationFolder: path.join(__dirname, '/migrations'),
+      migrationFolder: path.join(__dirname, '/migrations/postgres'),
     }),
   });
 

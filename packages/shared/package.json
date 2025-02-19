@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.12",
     "@types/node-telegram-bot-api": "^0.64.7",
+    "@types/pg": "^8.11.11",
     "@typescript-eslint/eslint-plugin": "^8.18.1",
     "@typescript-eslint/parser": "^8.18.1",
     "concurrently": "^9.1.2",
@@ -33,6 +34,7 @@
     "dotenv": "^16.4.7",
     "https-proxy-agent": "^7.0.6",
     "kysely": "^0.27.5",
-    "node-telegram-bot-api": "^0.66.0"
+    "node-telegram-bot-api": "^0.66.0",
+    "pg": "^8.13.2"
   }
 }
