@@ -12,6 +12,9 @@ export class DefragmentMinedData {
   async defragmentAndIndex(directory: string): Promise<void> {
     const files = await fs.promises.readdir(directory);
 
+    fs.mkdirSync(path.join(directory, 'test'));
+    fs.writeFileSync(path.join(directory, 'test', 'test-file.ts'), 'test');
+    console.log('done writing test file');
     for (const file of files) {
       const filePath = path.join(directory, file);
       const fileStat = await fs.promises.stat(filePath);
