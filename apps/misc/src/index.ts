@@ -6,7 +6,7 @@ const main = async (): Promise<void> => {
 
   const dataIndexer = new dataEngine.DataIndexer(dbConnection);
   const defrag = new dataEngine.DefragmentMinedData(dataIndexer);
-  await defrag.defragmentAndIndex(config.DATA_DIR);
+  await defrag.defragmentAndIndex(config.DATA_DIR + '/enriched_dex_pairs');
   console.log('Done with defrag');
 };
 
