@@ -3,7 +3,6 @@ import { config, db, dataEngine } from '@meteora-bot-monorepo/shared';
 const main = async (): Promise<void> => {
   const dbConnection = db.createPostgresDBConnection(config.DB_URL);
   await db.migrateToLatest(config.DB_URL);
-  console.log('defrag start?');
 
   const dataIndexer = new dataEngine.DataIndexer(dbConnection);
   const defrag = new dataEngine.DefragmentMinedData(dataIndexer);
