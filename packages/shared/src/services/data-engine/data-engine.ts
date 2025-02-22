@@ -148,3 +148,5 @@ export class DataEngine {
 export * from './indexer';
 
 export * from './sqlite-to-postgres';
+
+export * from './defragment-mined-data';

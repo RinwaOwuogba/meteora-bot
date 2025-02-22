@@ -30,6 +30,21 @@ importers:
         specifier: ^4.9.5
         version: 4.9.5
 
+  apps/misc:
+    dependencies:
+      '@meteora-bot-monorepo/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      dotenv:
+        specifier: ^16.0.3
+        version: 16.4.7
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.10.7)(typescript@4.9.5)
+      typescript:
+        specifier: ^4.9.5
+        version: 4.9.5
+
   apps/telegram-bot:
     dependencies:
       '@meteora-bot-monorepo/shared':

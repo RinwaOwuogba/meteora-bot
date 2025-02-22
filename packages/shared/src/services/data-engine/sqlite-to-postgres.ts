@@ -100,16 +100,20 @@ export class SqliteToPostgresDataMigrator {
   // }
 
   private async migrateMetrics(): Promise<void> {
-    console.log('Migrating metrics...');
-    const metrics = await this.sqliteDb
+    let metrics = await this.sqliteDb
       .selectFrom('metrics')
       .selectAll()
       .execute();
 
-    // if (metrics.length > 0) {
-    //   await this.postgresDb.insertInto('metrics').values(metrics).execute();
-    // }
-    // console.log(`Migrated ${metrics.length} metrics`);
+    if (metrics.length > 0) {
+      await this.postgresDb
+        .insertInto('metrics')
+        // remove ID to prevent conflict
+        .values(metrics.map((m) => ({ ...m, id: undefined })))
+        .execute();
+    }
+
+    console.log(`Migrated ${metrics.length} metrics`);
   }
 
   // private async migrateFetchTimes(): Promise<void> {

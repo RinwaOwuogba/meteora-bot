@@ -87,4 +87,18 @@ export class DataIndexer {
       await this.db.insertInto('pools').values(batch).execute();
     }
   }
+
+  async checkIfIndexed(timestamp: string): Promise<boolean> {
+    const result = await this.db
+      .selectFrom('fetch_times')
+      .select('timestamp')
+      .where(
+        'timestamp',
+        '=',
+        new Date(parseInt(timestamp)).toISOString() as any,
+      )
+      .execute();
+
+    return result.length > 0;
+  }
 }
