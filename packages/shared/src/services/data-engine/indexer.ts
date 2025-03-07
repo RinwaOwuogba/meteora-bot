@@ -48,6 +48,12 @@ export class DataIndexer {
         ? new Date(item.pairCreatedAt).toISOString()
         : new Date().toISOString(),
 
+      // Token data
+      base_symbol: item.baseToken?.symbol || null,
+      quote_symbol: item.quoteToken?.symbol || null,
+      base_address: item.baseToken?.address || null,
+      quote_address: item.quoteToken?.address || null,
+
       // 24h metrics
       txns_24h: (item.txns?.h24?.buys ?? 0) + (item.txns?.h24?.sells ?? 0),
       buys_24h: item.txns?.h24?.buys ?? 0,

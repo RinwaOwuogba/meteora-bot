@@ -142,6 +142,10 @@ export type MetricUpdate = Updateable<MetricsTable>;
 export interface PoolsTable {
   id: Generated<number>;
   pair_address: string;
+  base_symbol: string | null;
+  quote_symbol: string | null;
+  base_address: string | null;
+  quote_address: string | null;
   chain_id: string;
   dex_id: string;
   fetch_time_id: number;

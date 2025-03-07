@@ -60,6 +60,8 @@ export const BLUE_CHIPS = [
   'bonkSOL',
   'LST',
   'mSOL',
+  'wBTC',
+  'cbBTC',
   'zippySOL',
 ].map((token) => token.toLowerCase());
 export const DB_URL = process.env.DATABASE_URL || '';
