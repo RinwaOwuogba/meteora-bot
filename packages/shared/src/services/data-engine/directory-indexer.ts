@@ -182,11 +182,7 @@ export class DirectoryIndexer {
       const data = JSON.parse(fileContent);
 
       // Index the data
-      await this.dataIndexer.indexData(
-        data,
-        new Date(timestamp),
-        'historical_data_' + queryKey,
-      );
+      await this.dataIndexer.indexData(data, new Date(timestamp), queryKey);
 
       console.log(`Successfully indexed: ${path.basename(filePath)}`);
     } catch (error) {
@@ -216,7 +212,7 @@ export class DirectoryIndexer {
     if (!match) {
       throw new Error(`Invalid file name format: ${fileName}`);
     }
-    return match[1];
+    return 'historical_data_' + match[1];
   }
 }
 
