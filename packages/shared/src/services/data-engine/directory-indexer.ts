@@ -182,7 +182,11 @@ export class DirectoryIndexer {
       const data = JSON.parse(fileContent);
 
       // Index the data
-      await this.dataIndexer.indexData(data, new Date(timestamp), queryKey);
+      await this.dataIndexer.indexData(
+        data,
+        new Date(timestamp),
+        'historical_data_' + queryKey,
+      );
 
       console.log(`Successfully indexed: ${path.basename(filePath)}`);
     } catch (error) {
