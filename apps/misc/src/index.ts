@@ -1,12 +1,10 @@
 import { config, db, dataEngine } from '@meteora-bot-monorepo/shared';
+import fs from 'fs';
 import path from 'path';
 
-async function main() {
-  // Create database connection
-  const dbUrl =
-    process.env.DATABASE_URL ||
-    'postgresql://postgres:postgres@localhost:5432/meteora';
-  const dbConnection = db.createPostgresDBConnection(dbUrl);
+const main = async (): Promise<void> => {
+  const dbConnection = db.createPostgresDBConnection(config.DB_URL);
+  await db.migrateToLatest(config.DB_URL);
 
   // Create directory indexer
   const directoryIndexer = new dataEngine.DirectoryIndexer(dbConnection);
@@ -24,6 +22,6 @@ async function main() {
     // Close the database connection
     await dbConnection.destroy();
   }
-}
+};
 
 main();

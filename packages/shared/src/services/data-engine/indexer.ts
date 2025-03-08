@@ -34,9 +34,7 @@ export class DataIndexer {
         qb
           .insertInto('fetch_times')
           .values(fetchTime)
-          .onConflict((oc) =>
-            oc.columns(['timestamp', 'query_key']).doNothing(),
-          )
+          .onConflict((oc) => oc.columns(['timestamp']).doNothing())
           .returning('id'),
       )
       .selectFrom('fetch_time_insert')
@@ -46,8 +44,7 @@ export class DataIndexer {
           .selectFrom('fetch_times')
           .select('id')
           .where('timestamp', '=', fetchTime.timestamp as any)
-          .where('query_key', '=', fetchTime.query_key)
-          .limit(1),
+          .where('query_key', '=', fetchTime.query_key),
       )
       .limit(1)
       .execute();
