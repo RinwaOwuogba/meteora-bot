@@ -8,7 +8,6 @@ import * as path from 'path';
 import { addMeteoraData } from '../meteora/get-dlmm-opportunities';
 import { generateId } from '@/utils/utils';
 import { DataIndexer } from './indexer';
-import { TokenDataUpdater } from './update-token-data';
 
 export class DataEngine {
   private db: Kysely<Database>;
@@ -153,3 +152,5 @@ export * from './sqlite-to-postgres';
 export * from './defragment-mined-data';
 
 export * from './update-token-data';
+
+export * from './directory-indexer';

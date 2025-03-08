@@ -28,11 +28,28 @@ export class DataIndexer {
       }),
     };
 
-    // Insert fetch time and get ID
+    // Insert fetch time if it doesn't exist and get ID
     const [fetchTimeResult] = await this.db
-      .insertInto('fetch_times')
-      .values(fetchTime)
-      .returning('id')
+      .with('fetch_time_insert', (qb) =>
+        qb
+          .insertInto('fetch_times')
+          .values(fetchTime)
+          .onConflict((oc) =>
+            oc.columns(['timestamp', 'query_key']).doNothing(),
+          )
+          .returning('id'),
+      )
+      .selectFrom('fetch_time_insert')
+      .select('id')
+      .unionAll(
+        this.db
+          .selectFrom('fetch_times')
+          .select('id')
+          .where('timestamp', '=', fetchTime.timestamp as any)
+          .where('query_key', '=', fetchTime.query_key)
+          .limit(1),
+      )
+      .limit(1)
       .execute();
 
     // Map data to pool records
@@ -86,7 +103,7 @@ export class DataIndexer {
     }));
 
     // Batch insert pool records
-    const INSERT_BATCH_SIZE = 2_000;
+    const INSERT_BATCH_SIZE = 1_000;
 
     for (let i = 0; i < poolRecords.length; i += INSERT_BATCH_SIZE) {
       const batch = poolRecords.slice(i, i + INSERT_BATCH_SIZE);

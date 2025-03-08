@@ -2,6 +2,18 @@ import fs from 'fs';
 import path from 'path';
 import { DataIndexer } from './indexer';
 
+/**
+ * DefragmentMinedData is responsible for organizing and indexing mined data files.
+ *
+ * This class handles:
+ * - Defragmenting data files by organizing them into date-based directories
+ * - Renaming files to follow a consistent format with ISO timestamps
+ * - Indexing the data into the database using DataIndexer
+ * - Preventing duplicate indexing by checking if data is already indexed
+ *
+ * The class processes historical data files, extracts timestamps and keys from filenames,
+ * and ensures data is properly stored and accessible for future queries.
+ */
 export class DefragmentMinedData {
   private dataIndexer: DataIndexer;
 
