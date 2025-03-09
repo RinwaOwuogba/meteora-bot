@@ -8,6 +8,8 @@
     "dev:with-build": "concurrently \"pnpm -r build:watch\" \"APP=$APP pnpm run dev:watch\"",
     "dev:tg": "APP=telegram-bot pnpm run dev:with-build",
     "dev:dm": "APP=data-miner pnpm run dev:with-build",
+    "dev:ui": "cd apps/ui && pnpm start; cd ..",
+    "dev:server": "cd apps/server && pnpm dev; cd ..",
     "clean": "pnpm -r clean"
   },
   "workspaces": [
@@ -18,5 +20,8 @@
   "devDependencies": {
     "concurrently": "^9.1.2",
     "nodemon": "^3.0.0"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0"
   }
 }
