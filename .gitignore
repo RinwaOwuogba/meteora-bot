@@ -6,7 +6,6 @@ dist
 **/meteora-pairs.json
 **/enriched-meteora-pairs.json
 **/dexscreener-pairs.json
-misc/*
 notes
 
 *.tsbuildinfo
