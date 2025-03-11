@@ -34,6 +34,7 @@ For deployment, the `monorepo-deploy.sh` script enables deployment of individual
 ## Project Structure
 
 This is a monorepo built with pnpm workspaces, organized as follows:
+```
 meteora-bot-monorepo/
 ├── apps/
 │ ├── data-miner/ # Service for collecting and analyzing market data
@@ -53,6 +54,7 @@ meteora-bot-monorepo/
 │ ├── swap/ # Token swap functionality
 │ └── telegram/ # Telegram bot services
 └── utils/ # Helper utilities
+```
 
 ## Core Technologies
 
