@@ -16,6 +16,8 @@ Unfortunately, it proven out of my current technical depth. So it's fallen into 
   The logic for taking on chain actions ie adding, removing liquidity, swapping tokens was copied from here
 - https://github.com/GeekLad/meteora-discord-bot/
   The logic for finding liquidity pools and performing some initial analysis was copied from here.
+- [Here's some](https://mega.nz/file/kVoRBRIb#S_MHlhORUis2VjF7CRjpb5coZ4kNkaa4PjEoe3aC66I) data scraped between 2025-01-10 till around 2025-03-08. It is ~3GB compressed (compressed with xz) and 30GB expanded.
+- There's a jupyter notebook in misc/met-book.ipynb which contains data exploration and preprocessing code in python.
 
 # Future plans?
 
